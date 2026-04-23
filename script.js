@@ -611,17 +611,63 @@ function fadeVolume(audio, from, to, duration) {
  * initMusicToggle — reveals the floating button and wires click.
  * Called inside initAll() so it appears after the opening closes.
  */
+/**
+ * initMusicToggle — reveals the floating button and wires click.
+ */
 function initMusicToggle() {
   const btn   = document.getElementById('musicToggle');
   const audio = document.getElementById('bgMusic');
   if (!btn || !audio) return;
 
-  // ── Reveal the button with a small entrance delay ───────────
-  // Slight delay lets the opening-screen transition finish cleanly
+  // 1. Hiện nút sau 600ms (giữ nguyên của bạn)
   setTimeout(() => {
     btn.classList.remove('music-toggle--hidden');
   }, 600);
 
+  // 2. Hàm đồng bộ giao diện nút với trạng thái nhạc
+  function syncState() {
+    if (audio.paused) {
+      btn.classList.add('music-toggle--paused');
+      btn.setAttribute('aria-label', 'Play background music');
+      btn.title = 'Play music';
+    } else {
+      btn.classList.remove('music-toggle--paused');
+      btn.setAttribute('aria-label', 'Pause background music');
+      btn.title = 'Pause music';
+    }
+  }
+
+  // 3. ĐOẠN QUAN TRỌNG NHẤT: Bắt sự kiện Click trên điện thoại
+  btn.addEventListener('click', function() {
+    if (audio.paused) {
+      audio.volume = 0.55; // Đặt âm lượng vừa phải
+      audio.play();
+    } else {
+      audio.pause();
+    }
+    syncState(); // Cập nhật lại icon ngay lập tức
+  });
+
+  // 4. (Tùy chọn) Bắt trình duyệt tự động cập nhật icon nếu nhạc bị dừng đột ngột
+  audio.addEventListener('play', syncState);
+  audio.addEventListener('pause', syncState);
+
+  // Chạy đồng bộ lần đầu
+  syncState();
+}
+
+// MẸO CỰC HAY CHO MOBILE: 
+// Ép nhạc tự động phát ngay lần chạm (click) ĐẦU TIÊN bất kỳ đâu trên màn hình
+document.body.addEventListener('click', function firstInteraction() {
+  const audio = document.getElementById('bgMusic');
+  if (audio && audio.paused) {
+    audio.play().then(() => {
+      audio.volume = 0.55;
+    }).catch(e => console.log("Trình duyệt vẫn chặn:", e));
+  }
+  // Xóa lắng nghe này đi sau khi chạm lần đầu để không bị chạy lặp lại
+  document.body.removeEventListener('click', firstInteraction);
+}, { once: true });
   // ── Sync initial visual state to audio state ────────────────
   function syncState() {
     if (audio.paused) {
@@ -665,7 +711,7 @@ function initMusicToggle() {
   audio.addEventListener('play',  syncState);
 
   syncState();  /* set correct initial state */
-}
+
 
 
 /* ================================================================
