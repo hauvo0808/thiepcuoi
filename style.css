@@ -258,7 +258,7 @@ input, textarea { font-family: inherit; }
 }
 .hero-bg {
   position: absolute; inset: -80px 0;
-  background-image: url('https://drive.google.com/file/d/18OIGKff9OncWp94yG4Gp_1Iv79I_PSEQ/view?usp=drive_link');
+  background-image: url('images/lon2.JPG');
   background-size: contain; background-position: center; will-change: transform;
 }
 /* Charcoal-tinted overlay */
