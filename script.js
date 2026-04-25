@@ -33,7 +33,7 @@
 ================================================================ */
 const CONFIG = {
   // ✏️ Change to real wedding date: 'YYYY-MM-DDTHH:MM:SS'
-  WEDDING_DATE: new Date('2026-05-03T17:30:00'),
+  WEDDING_DATE: new Date('2026-05-03T10:30:00'),
 
   // Soft sparkle palette — blush pinks, pearls and pale golds
   // Elegant on both the pink opening screen and white sections
